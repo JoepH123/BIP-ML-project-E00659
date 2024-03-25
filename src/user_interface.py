@@ -3,32 +3,210 @@ import io
 import dash
 from dash import dcc, html, dash_table, Input, Output, State
 import pandas as pd
+import dash_bootstrap_components as dbc
 
-# Initialize the Dash app
-app = dash.Dash(__name__)
 
-app.layout = html.Div([
-    dcc.Upload(
-        id='upload-data',
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
-        ]),
-        style={
-            'width': '100%', 'height': '60px', 'lineHeight': '60px',
-            'borderWidth': '1px', 'borderStyle': 'dashed', 'borderRadius': '5px',
-            'textAlign': 'center', 'margin': '10px'
-        },
-        # Allow multiple files to be uploaded
-        multiple=False
+#Initialize the Dash app
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SOLAR])
+app.title = "Exemption code predictor"
+
+tab1_content = html.Div(children=[
+    html.Br(),
+    dbc.Row(
+        dbc.Col(
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select Files (.csv or .xlsx)')
+                ]),
+                style={
+                    'width': '100%', 'height': '60px', 'lineHeight': '60px',
+                    'borderWidth': '2px', 'borderStyle': 'dashed', 'borderRadius': '10px',
+                    'textAlign': 'center', 'margin': '10px', 'color': '#e3e3e3', 'fontWeight': 'bold'  # 'color': '#888'
+                },
+                # Allow multiple files to be uploaded
+                multiple=False
+            ),
+            width=4
+        ),
+        justify="center"
     ),
-    dash_table.DataTable(
-        id='output-data-table',
-        page_size=10,  # Display 10 rows per page
-        style_table={'height': '300px', 'overflowY': 'auto'},
+    dbc.Row(
+        dbc.Col(
+            dbc.Card(
+                dash_table.DataTable(
+                    id='output-data-table',
+                    page_size=10,  # Display 10 rows per page
+                    style_table={'overflowY': 'hidden', 'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)'},
+                    style_cell={'padding': '10px', 'textAlign': 'left', 'border': 'none', 'color': "#444444"},
+                    style_header={
+                        'backgroundColor': 'rgb(0, 43, 54, 1)',
+                        'fontWeight': 'bold',
+                        'borderTopLeftRadius': '15px',
+                        'borderTopRightRadius': '15px',
+                        'color': '#e3e3e3',
+                        'padding': '10px',
+                    },
+                    style_data_conditional=[
+                        {
+                            'if': {'row_index': 'odd'},
+                            'backgroundColor': 'rgb(248, 248, 248)'
+                        },             
+                        {
+                            "if": {"state": "selected"}, # 'active' | 'selected'
+                            "backgroundColor": None, 
+                            "border": "3px solid #b58900",
+                        },
+                    ],
+                ),
+                body=True,  # This ensures that the card body styling is applied
+                # style={'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)', 'marginTop': '20px'}
+            ),
+            width=10
+        ),
+        justify="center"
     ),
-    html.Div(id='clicked-row')
+    dbc.Row(
+        dbc.Col(
+            html.Div(id='clicked-row', style={"textAlign": "center", "color": "#e3e3e3"}),
+            width=12
+        ),
+        justify="center"
+    )
 ])
+
+tab2_content = html.Div(children=[
+    html.Div([
+        html.Br(),
+        dbc.InputGroup(
+            [dbc.InputGroupText("@"), dbc.Input(placeholder="Username")],
+            className="mb-3",
+        ),
+        dbc.InputGroup(
+            [
+                dbc.Input(placeholder="Recipient's username"),
+                dbc.InputGroupText("@example.com"),
+            ],
+            className="mb-3",
+        ),
+        dbc.InputGroup(
+            [
+                dbc.InputGroupText("$"),
+                dbc.Input(placeholder="Amount", type="number"),
+                dbc.InputGroupText(".00"),
+            ],
+            className="mb-3",
+        ),
+        dbc.InputGroup(
+            [
+                dbc.InputGroupText("Total:"),
+                dbc.InputGroupText("$"),
+                dbc.Input(placeholder="Amount", type="number"),
+                dbc.InputGroupText(".00"),
+                dbc.InputGroupText("only"),
+            ],
+            className="mb-3",
+        ),
+        dbc.InputGroup(
+            [
+                dbc.InputGroupText("With textarea"),
+                dbc.Textarea(),
+            ],
+            className="mb-3",
+        ),
+        dbc.InputGroup(
+            [
+                dbc.Select(
+                    options=[
+                        {"label": "Option 1", "value": 1},
+                        {"label": "Option 2", "value": 2},
+                    ]
+                ),
+                dbc.InputGroupText("With select"),
+            ]
+        ),
+    ], style={"width": "60%", "margin": "0 auto"}),
+    html.Br(),
+    html.Div(
+        dbc.Button("Submit"),
+        style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"}
+    )
+])
+
+# Custom layout with dbc components
+app.layout = dbc.Container([
+    html.Br(),
+    html.H1('VAT Exemption Code Predictor', style={'textAlign': 'center', 'marginBottom': '20px', 'color': '#e3e3e3'}),
+
+    # Different tabs approach
+    dbc.Tabs(
+        [
+            dbc.Tab(tab1_content, label="Tab 1"),
+            dbc.Tab(tab2_content, label="Tab 2"),
+        ], style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"}
+    )
+
+    # Old approach --> only upload file
+
+    # dbc.Row(
+    #     dbc.Col(
+    #         dcc.Upload(
+    #             id='upload-data',
+    #             children=html.Div([
+    #                 'Drag and Drop or ',
+    #                 html.A('Select Files')
+    #             ]),
+    #             style={
+    #                 'width': '100%', 'height': '60px', 'lineHeight': '60px',
+    #                 'borderWidth': '2px', 'borderStyle': 'dashed', 'borderRadius': '10px',
+    #                 'textAlign': 'center', 'margin': '10px', 'color': '#e3e3e3', 'fontWeight': 'bold'  # 'color': '#888'
+    #             },
+    #             # Allow multiple files to be uploaded
+    #             multiple=False
+    #         ),
+    #         width=4
+    #     ),
+    #     justify="center"
+    # ),
+    # dbc.Row(
+    #     dbc.Col(
+    #         dbc.Card(
+    #             dash_table.DataTable(
+    #                 id='output-data-table',
+    #                 page_size=10,  # Display 10 rows per page
+    #                 style_table={'overflowY': 'hidden', 'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)'},
+    #                 style_cell={'padding': '10px', 'textAlign': 'left', 'border': 'none', 'color': "#444444"},
+    #                 style_header={
+    #                     'backgroundColor': 'rgb(0, 43, 54, 1)',
+    #                     'fontWeight': 'bold',
+    #                     'borderTopLeftRadius': '15px',
+    #                     'borderTopRightRadius': '15px',
+    #                     'color': '#e3e3e3',
+    #                     'padding': '10px',
+    #                 },
+    #                 style_data_conditional=[
+    #                     {
+    #                         'if': {'row_index': 'odd'},
+    #                         'backgroundColor': 'rgb(248, 248, 248)'
+    #                     }
+    #                 ],
+    #             ),
+    #             body=True,  # This ensures that the card body styling is applied
+    #             style={'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)', 'marginTop': '20px'}
+    #         ),
+    #         width=10
+    #     ),
+    #     justify="center"
+    # ),
+    # dbc.Row(
+    #     dbc.Col(
+    #         html.Div(id='clicked-row', style={"textAlign": "center", "color": "#e3e3e3"}),
+    #         width=12
+    #     ),
+    #     justify="center"
+    # )
+], fluid=True)
 
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')

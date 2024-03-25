@@ -61,7 +61,7 @@ tab1_content = html.Div(children=[
                     ],
                 ),
                 body=True,  # This ensures that the card body styling is applied
-                # style={'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)', 'marginTop': '20px'}
+                style={'borderRadius': '15px', 'boxShadow': '0 2px 2px 0 rgba(0,0,0,0.2)', 'marginTop': '20px'}
             ),
             width=10
         ),
@@ -76,63 +76,72 @@ tab1_content = html.Div(children=[
     )
 ])
 
-tab2_content = html.Div(children=[
-    html.Div([
-        html.Br(),
-        dbc.InputGroup(
-            [dbc.InputGroupText("@"), dbc.Input(placeholder="Username")],
-            className="mb-3",
-        ),
-        dbc.InputGroup(
-            [
-                dbc.Input(placeholder="Recipient's username"),
-                dbc.InputGroupText("@example.com"),
-            ],
-            className="mb-3",
-        ),
-        dbc.InputGroup(
-            [
-                dbc.InputGroupText("$"),
-                dbc.Input(placeholder="Amount", type="number"),
-                dbc.InputGroupText(".00"),
-            ],
-            className="mb-3",
-        ),
-        dbc.InputGroup(
-            [
-                dbc.InputGroupText("Total:"),
-                dbc.InputGroupText("$"),
-                dbc.Input(placeholder="Amount", type="number"),
-                dbc.InputGroupText(".00"),
-                dbc.InputGroupText("only"),
-            ],
-            className="mb-3",
-        ),
-        dbc.InputGroup(
-            [
-                dbc.InputGroupText("With textarea"),
-                dbc.Textarea(),
-            ],
-            className="mb-3",
-        ),
-        dbc.InputGroup(
-            [
-                dbc.Select(
-                    options=[
-                        {"label": "Option 1", "value": 1},
-                        {"label": "Option 2", "value": 2},
-                    ]
-                ),
-                dbc.InputGroupText("With select"),
-            ]
-        ),
-    ], style={"width": "60%", "margin": "0 auto"}),
+tab2_content = html.Div([
     html.Br(),
-    html.Div(
-        dbc.Button("Submit"),
-        style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"}
+    dbc.Row(
+        dbc.Col(
+            dbc.Card([
+                html.Div([
+                    dbc.InputGroup(
+                        [dbc.InputGroupText("@"), dbc.Input(placeholder="Username")],
+                        className="mb-3",
+                    ),
+                    dbc.InputGroup(
+                        [
+                            dbc.Input(placeholder="Recipient's username"),
+                            dbc.InputGroupText("@example.com"),
+                        ],
+                        className="mb-3",
+                    ),
+                    dbc.InputGroup(
+                        [
+                            dbc.InputGroupText("$"),
+                            dbc.Input(placeholder="Amount", type="number"),
+                            dbc.InputGroupText(".00"),
+                        ],
+                        className="mb-3",
+                    ),
+                    dbc.InputGroup(
+                        [
+                            dbc.InputGroupText("Total:"),
+                            dbc.InputGroupText("$"),
+                            dbc.Input(placeholder="Amount", type="number"),
+                            dbc.InputGroupText(".00"),
+                            dbc.InputGroupText("only"),
+                        ],
+                        className="mb-3",
+                    ),
+                    dbc.InputGroup(
+                        [
+                            dbc.InputGroupText("With textarea"),
+                            dbc.Textarea(),
+                        ],
+                        className="mb-3",
+                    ),
+                    dbc.InputGroup(
+                        [
+                            dbc.Select(
+                                options=[
+                                    {"label": "Option 1", "value": 1},
+                                    {"label": "Option 2", "value": 2},
+                                ]
+                            ),
+                            dbc.InputGroupText("With select"),
+                        ]
+                    ),
+                ]),#, style={"width": "60%", "margin": "0 auto"}),
+                html.Br(),
+                html.Div(
+                    dbc.Button("Submit"),
+                    style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"}
+                ),
+            ], style={"padding": "15px"}),
+            width={"size": 8, "offset": 2},
+        ),
+        justify=True
     )
 ])
+                
 
 # Custom layout with dbc components
 app.layout = dbc.Container([
